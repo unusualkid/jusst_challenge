@@ -7,9 +7,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class HomePage extends StatefulWidget {
   final String title;
   final WebSocketChannel channel = IOWebSocketChannel.connect(API.serverHost);
-  final String coverArtUrl;
 
-  HomePage({Key key, @required this.title, this.coverArtUrl}) : super(key: key);
+  HomePage({Key key, @required this.title}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -17,6 +16,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController _controller = TextEditingController();
+  var coverArtUrl = '';
+  var artist = '';
+  var title = '';
 
   @override
   void initState() {
@@ -36,11 +38,17 @@ class _HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var parsedJson = json.decode(snapshot.data);
-              var coverArtUrl = '';
-              if (parsedJson['metadata'] != null) {
-                if (parsedJson['metadata']['coverArt'] != null) {
-                  print(parsedJson['metadata']['coverArt']);
-                  coverArtUrl = parsedJson['metadata']['coverArt'];
+
+              if (parsedJson[Strings.metaDataKey] != null) {
+                var metaData = parsedJson[Strings.metaDataKey];
+                if (metaData[Strings.coverArtKey] != null) {
+                  coverArtUrl = metaData[Strings.coverArtKey];
+                }
+                if (metaData[Strings.artistKey] != null) {
+                  artist = metaData[Strings.artistKey];
+                }
+                if (metaData[Strings.titleKey] != null) {
+                  title = metaData[Strings.titleKey];
                 }
               }
               return Container(
@@ -48,15 +56,17 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CoverArt(
+                    SongInfoWidget(
                       url: coverArtUrl,
+                      artist: artist,
+                      title: title,
                     ),
-                    Text('title'),
-                    Text(
-                        snapshot.hasData ? '${snapshot.data}' : 'Hello World!'),
+                    Text(snapshot.hasData
+                        ? '${snapshot.data}'
+                        : 'snapshot.data'),
                     Text(snapshot.hasData
                         ? '${snapshot.connectionState}'
-                        : 'Hello World!'),
+                        : 'snapshot.connectionState'),
                   ],
                 ),
               );
@@ -86,22 +96,48 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class CoverArt extends StatefulWidget {
+class SongInfoWidget extends StatefulWidget {
   final String url;
+  final String artist;
+  final String title;
 
-  const CoverArt({Key key, @required this.url}) : super(key: key);
+  const SongInfoWidget({
+    Key key,
+    @required this.url,
+    @required this.artist,
+    @required this.title,
+  }) : super(key: key);
 
   @override
-  _CoverArtState createState() => _CoverArtState();
+  _SongInfoWidgetState createState() => _SongInfoWidgetState();
 }
 
-class _CoverArtState extends State<CoverArt> {
+class _SongInfoWidgetState extends State<SongInfoWidget> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Image.network(
-        widget.url,
-      ),
+    if (widget.url != '') {
+      return Column(
+        children: [
+          Container(
+            child: Image.network(
+              widget.url,
+            ),
+          ),
+          Text(widget.title),
+          Text('by ' + widget.artist),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        Container(
+          height: 250,
+          width: 250,
+          color: Colors.grey[300],
+        ),
+        Text('title'),
+        Text('by artist'),
+      ],
     );
   }
 }
