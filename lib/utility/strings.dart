@@ -1,7 +1,9 @@
 class Strings {
-  static const appName = 'Juust Challenge';
+  static const appName = 'Jusst Challenge';
+  static const metaDataKey = 'metadata';
+  static const coverArtKey = 'coverArt';
 }
 
 class API {
-  static const serverHost = 'ws://echo.websocket.org';
+  static const serverHost = 'wss://challenge.jusst.engineering/ws';
 }
