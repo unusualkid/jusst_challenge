@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jusst_challenge/widgets/home_page.dart';
+import 'package:web_socket_channel/io.dart';
 import 'utility/strings.dart';
 
 void main() {
@@ -16,7 +17,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(title: Strings.appName),
+      home: HomePage(
+        title: Strings.appName,
+        channel: IOWebSocketChannel.connect(API.serverHost),
+      ),
     );
   }
 }

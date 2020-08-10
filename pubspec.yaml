@@ -28,8 +28,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
 
-  # A package containing the most ~5000 used English words and some utility functions.
-  english_words: ^3.1.5
+  # Provides StreamChannel wrappers for WebSocket connections.
+  web_socket_channel: ^1.1.0
 
 dev_dependencies:
   flutter_test:
