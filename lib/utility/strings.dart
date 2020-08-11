@@ -1,6 +1,7 @@
 class Strings {
   static const appName = 'Jusst Challenge';
 
+  // For parsing json return from websocket
   static const systemKey = 'system';
   static const volumeKey = 'volume';
   static const bluetoothKey = 'bluetooth';
