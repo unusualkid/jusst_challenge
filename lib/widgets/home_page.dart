@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jusst_challenge/utility/size_config.dart';
@@ -5,6 +6,7 @@ import 'package:jusst_challenge/utility/strings.dart';
 import 'package:jusst_challenge/widgets/playback_icon.dart';
 import 'package:jusst_challenge/widgets/progress_bar.dart';
 import 'package:jusst_challenge/widgets/song_info.dart';
+import 'package:jusst_challenge/widgets/system_toast.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -23,10 +25,10 @@ class _HomePageState extends State<HomePage> {
   var artist = '';
   var title = '';
   var duration = 0;
-  var playbackState = 'inactive';
+  var playbackState = PlaybackState.inactive;
   var playbackPosition = 0;
   var volume = -1;
-  var systemState = '';
+  var systemState = SystemState.ready;
 
   @override
   void initState() {
@@ -47,7 +49,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var parsedJson = json.decode(snapshot.data);
-
+              print('snapshot.data: ${snapshot.data}');
               if (parsedJson[Strings.metaDataKey] != null) {
                 var metaData = parsedJson[Strings.metaDataKey];
                 if (metaData[Strings.coverArtKey] != null) {
@@ -81,37 +83,44 @@ class _HomePageState extends State<HomePage> {
               }
             }
 
-            return Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SongInfo(
-                    url: coverArtUrl,
-                    artist: artist,
-                    title: title,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            return Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        flex: 2,
-                        child: PlaybackIcon(
-                          playbackState: playbackState,
-                        ),
+                      SongInfo(
+                        url: coverArtUrl,
+                        artist: artist,
+                        title: title,
                       ),
-                      Expanded(
-                        flex: 8,
-                        child: ProgressBar(
-                          percent: playbackPosition / duration <= 1.0
-                              ? playbackPosition / duration
-                              : 0.0,
-                        ),
-                      )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: PlaybackIcon(
+                              playbackState: playbackState,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 8,
+                            child: ProgressBar(
+                              percent: playbackPosition / duration <= 1.0
+                                  ? playbackPosition / duration
+                                  : 0.0,
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                SystemToast(
+                  message: systemState,
+                ),
+              ],
             );
           },
         ),
@@ -123,5 +132,20 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     widget.channel.sink.close();
     super.dispose();
+  }
+}
+
+class VolumeToast extends StatefulWidget {
+  final message;
+
+  const VolumeToast({Key key, this.message}) : super(key: key);
+  @override
+  _VolumeToastState createState() => _VolumeToastState();
+}
+
+class _VolumeToastState extends State<VolumeToast> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
