@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   var playbackState = 'inactive';
   var playbackPosition = 0;
   var volume = -1;
+  var systemState = '';
 
   @override
   void initState() {
@@ -59,16 +60,13 @@ class _HomePageState extends State<HomePage> {
                   title = metaData[Strings.titleKey];
                 }
                 if (metaData[Strings.durationKey] != null) {
-                  // Reset playback position on the progressBar
-                  playbackPosition = 0;
-
                   duration = metaData[Strings.durationKey];
                 }
               }
 
-              // if (parsedJson[Strings.volumeKey] != null) {
-              //   volume = parsedJson[Strings.volumeKey];
-              // }
+              if (parsedJson[Strings.volumeKey] != null) {
+                volume = parsedJson[Strings.volumeKey];
+              }
 
               if (parsedJson[Strings.playbackKey] != null) {
                 playbackState = parsedJson[Strings.playbackKey];
@@ -78,10 +76,9 @@ class _HomePageState extends State<HomePage> {
                 playbackPosition = parsedJson[Strings.playbackPositionKey];
               }
 
-              // if (parsedJson[Strings.systemKey] != null) {
-              //   if (parsedJson[Strings.systemKey] != SystemState.ready) {}
-              // }
-
+              if (parsedJson[Strings.systemKey] != null) {
+                systemState = parsedJson[Strings.systemKey];
+              }
             }
 
             return Container(
@@ -106,11 +103,33 @@ class _HomePageState extends State<HomePage> {
                       Expanded(
                         flex: 8,
                         child: ProgressBar(
-                          percent: playbackPosition / duration,
+                          percent: playbackPosition / duration <= 1.0
+                              ? playbackPosition / duration
+                              : 0.0,
                         ),
                       )
                     ],
                   ),
+
+                  // For debugging
+                  // Text('CoverArt: ${coverArtUrl}'),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Text('Artist: ${artist}'),
+                  //     Text('Title: ${title}'),
+                  //   ],
+                  // ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Text('Dura: ${duration}'),
+                  //     Text('PbPoint: ${playbackPosition}'),
+                  //     Text('PbState: ${playbackState}'),
+                  //   ],
+                  // ),
+                  // Text(snapshot.hasData ? '${snapshot.data}' : ''),
+                  // Text(snapshot.hasData ? '${snapshot.connectionState}' : ''),
                 ],
               ),
             );
