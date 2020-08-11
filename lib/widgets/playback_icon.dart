@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PlaybackIcon extends StatefulWidget {
   final playbackState;
 
-  const PlaybackIcon({Key key, this.playbackState}) : super(key: key);
+  const PlaybackIcon({Key key, @required this.playbackState}) : super(key: key);
   @override
   _PlaybackIconState createState() => _PlaybackIconState();
 }
