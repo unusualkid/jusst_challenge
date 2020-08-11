@@ -13,6 +13,19 @@ class Strings {
   static const durationKey = 'duration';
 }
 
+class SystemState {
+  static const booting = 'booting';
+  static const updating = 'updating';
+  static const error = 'error';
+  static const ready = 'ready';
+}
+
+class PlaybackState {
+  static const inactive = 'inactive';
+  static const paused = 'paused';
+  static const playing = 'playing';
+}
+
 class API {
   static const serverHost = 'wss://challenge.jusst.engineering/ws';
 }
