@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jusst_challenge/model/state.dart';
 import 'package:jusst_challenge/utility/strings.dart';
+import 'package:jusst_challenge/widgets/song_info.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   var artist = '';
   var title = '';
   var duration = -1;
-  var playbackState = PlaybackState.inactive;
+  var playbackState = 'inactive';
   var playbackPosition = -1;
   var volume = -1;
 
@@ -63,14 +64,14 @@ class _HomePageState extends State<HomePage> {
               //   volume = parsedJson[Strings.volumeKey];
               // }
 
-              // if (parsedJson[Strings.playbackKey] != null) {
-              //   playbackState = parsedJson[Strings.playbackKey];
-              // }
+              if (parsedJson[Strings.playbackKey] != null) {
+                playbackState = parsedJson[Strings.playbackKey];
+              }
 
-              // if (parsedJson[Strings.playbackPositionKey] != null) {
-              //   playbackPosition = parsedJson[Strings.playbackPositionKey];
-              //   duration += playbackPosition;
-              // }
+              if (parsedJson[Strings.playbackPositionKey] != null) {
+                playbackPosition = parsedJson[Strings.playbackPositionKey];
+                duration += playbackPosition;
+              }
 
               // if (parsedJson[Strings.systemKey] != null) {
               //   if (parsedJson[Strings.systemKey] != SystemState.ready) {}
@@ -83,10 +84,17 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SongInfoWidget(
+                  SongInfo(
                     url: coverArtUrl,
                     artist: artist,
                     title: title,
+                  ),
+                  Row(
+                    children: [
+                      PlaybackIcon(
+                        playbackState: playbackState,
+                      ),
+                    ],
                   ),
                   Text(snapshot.hasData ? '${snapshot.data}' : ''),
                   Text(snapshot.hasData ? '${snapshot.connectionState}' : ''),
@@ -106,57 +114,10 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class SongInfoWidget extends StatefulWidget {
-  final String url;
-  final String artist;
-  final String title;
-
-  const SongInfoWidget({
-    Key key,
-    @required this.url,
-    @required this.artist,
-    @required this.title,
-  }) : super(key: key);
-
-  @override
-  _SongInfoWidgetState createState() => _SongInfoWidgetState();
-}
-
-class _SongInfoWidgetState extends State<SongInfoWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            child: widget.url != ''
-                ? Image.network(
-                    widget.url,
-                  )
-                : AspectRatio(
-                    aspectRatio: 1,
-                    child: Container(
-                      color: Colors.grey[300],
-                      width: double.infinity,
-                    ),
-                  ),
-          ),
-          Text(
-            widget.title != '' ? widget.title : '',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Text(
-            widget.artist != '' ? 'by ' + widget.artist : '',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class PlaybackIcon extends StatefulWidget {
+  final playbackState;
+
+  const PlaybackIcon({Key key, this.playbackState}) : super(key: key);
   @override
   _PlaybackIconState createState() => _PlaybackIconState();
 }
@@ -164,16 +125,15 @@ class PlaybackIcon extends StatefulWidget {
 class _PlaybackIconState extends State<PlaybackIcon> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Icon(Icons.pause),
-    );
+    return widget.playbackState == 'inactive'
+        ? SizedBox.shrink()
+        : CircleAvatar(
+            backgroundColor: Colors.lightBlue,
+            child: Icon(
+              widget.playbackState == 'playing'
+                  ? Icons.play_arrow
+                  : Icons.pause,
+            ),
+          );
   }
 }
-
-var coverArtUrl = '';
-var artist = '';
-var title = '';
-var duration = -1;
-var playbackState = PlaybackState.inactive;
-var playbackPosition = -1;
-var volume = -1;
