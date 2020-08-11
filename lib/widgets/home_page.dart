@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jusst_challenge/model/state.dart';
 import 'package:jusst_challenge/utility/strings.dart';
+import 'package:jusst_challenge/widgets/playback_icon.dart';
 import 'package:jusst_challenge/widgets/song_info.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -111,29 +112,5 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     widget.channel.sink.close();
     super.dispose();
-  }
-}
-
-class PlaybackIcon extends StatefulWidget {
-  final playbackState;
-
-  const PlaybackIcon({Key key, this.playbackState}) : super(key: key);
-  @override
-  _PlaybackIconState createState() => _PlaybackIconState();
-}
-
-class _PlaybackIconState extends State<PlaybackIcon> {
-  @override
-  Widget build(BuildContext context) {
-    return widget.playbackState == 'inactive'
-        ? SizedBox.shrink()
-        : CircleAvatar(
-            backgroundColor: Colors.lightBlue,
-            child: Icon(
-              widget.playbackState == 'playing'
-                  ? Icons.play_arrow
-                  : Icons.pause,
-            ),
-          );
   }
 }
