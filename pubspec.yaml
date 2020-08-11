@@ -31,6 +31,8 @@ dependencies:
   # Provides StreamChannel wrappers for WebSocket connections.
   web_socket_channel: ^1.1.0
 
+  percent_indicator: ^2.1.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
