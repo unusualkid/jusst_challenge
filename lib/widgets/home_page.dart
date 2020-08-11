@@ -125,24 +125,33 @@ class SongInfoWidget extends StatefulWidget {
 class _SongInfoWidgetState extends State<SongInfoWidget> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          child: widget.url != ''
-              ? Image.network(
-                  widget.url,
-                )
-              : AspectRatio(
-                  aspectRatio: 1,
-                  child: Container(
-                    color: Colors.grey[300],
-                    width: double.infinity,
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: widget.url != ''
+                ? Image.network(
+                    widget.url,
+                  )
+                : AspectRatio(
+                    aspectRatio: 1,
+                    child: Container(
+                      color: Colors.grey[300],
+                      width: double.infinity,
+                    ),
                   ),
-                ),
-        ),
-        Text(widget.title != '' ? widget.title : ''),
-        Text(widget.artist != '' ? 'by ' + widget.artist : ''),
-      ],
+          ),
+          Text(
+            widget.title != '' ? widget.title : '',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          Text(
+            widget.artist != '' ? 'by ' + widget.artist : '',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
+        ],
+      ),
     );
   }
 }
