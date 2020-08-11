@@ -110,26 +110,6 @@ class _HomePageState extends State<HomePage> {
                       )
                     ],
                   ),
-
-                  // For debugging
-                  // Text('CoverArt: ${coverArtUrl}'),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text('Artist: ${artist}'),
-                  //     Text('Title: ${title}'),
-                  //   ],
-                  // ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text('Dura: ${duration}'),
-                  //     Text('PbPoint: ${playbackPosition}'),
-                  //     Text('PbState: ${playbackState}'),
-                  //   ],
-                  // ),
-                  // Text(snapshot.hasData ? '${snapshot.data}' : ''),
-                  // Text(snapshot.hasData ? '${snapshot.connectionState}' : ''),
                 ],
               ),
             );
