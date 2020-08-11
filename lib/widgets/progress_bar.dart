@@ -18,7 +18,8 @@ class _ProgressBarState extends State<ProgressBar> {
         width: SizeConfig.safeBlockHorizontal * 63,
         lineHeight: 14.0,
         percent: widget.percent,
-        progressColor: Colors.lightBlue,
+        backgroundColor: Theme.of(context).disabledColor,
+        progressColor: Theme.of(context).primaryColorLight,
       ),
     );
   }
