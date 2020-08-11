@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:jusst_challenge/model/state.dart';
+import 'package:jusst_challenge/utility/size_config.dart';
 import 'package:jusst_challenge/utility/strings.dart';
 import 'package:jusst_challenge/widgets/playback_icon.dart';
+import 'package:jusst_challenge/widgets/progress_bar.dart';
 import 'package:jusst_challenge/widgets/song_info.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -21,9 +22,9 @@ class _HomePageState extends State<HomePage> {
   var coverArtUrl = '';
   var artist = '';
   var title = '';
-  var duration = -1;
+  var duration = 0;
   var playbackState = 'inactive';
-  var playbackPosition = -1;
+  var playbackPosition = 0;
   var volume = -1;
 
   @override
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -58,6 +60,9 @@ class _HomePageState extends State<HomePage> {
                 }
                 if (metaData[Strings.durationKey] != null) {
                   duration = metaData[Strings.durationKey];
+
+                  // Reset playback position on the progressBar
+                  playbackPosition = 0;
                 }
               }
 
@@ -71,7 +76,6 @@ class _HomePageState extends State<HomePage> {
 
               if (parsedJson[Strings.playbackPositionKey] != null) {
                 playbackPosition = parsedJson[Strings.playbackPositionKey];
-                duration += playbackPosition;
               }
 
               // if (parsedJson[Strings.systemKey] != null) {
@@ -83,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             return Container(
               padding: EdgeInsets.all(10),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SongInfo(
                     url: coverArtUrl,
@@ -91,12 +95,23 @@ class _HomePageState extends State<HomePage> {
                     title: title,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      PlaybackIcon(
-                        playbackState: playbackState,
+                      Expanded(
+                        flex: 2,
+                        child: PlaybackIcon(
+                          playbackState: playbackState,
+                        ),
                       ),
+                      Expanded(
+                        flex: 8,
+                        child: ProgressBar(
+                          percent: playbackPosition / duration,
+                        ),
+                      )
                     ],
                   ),
+                  Spacer(),
                   Text(snapshot.hasData ? '${snapshot.data}' : ''),
                   Text(snapshot.hasData ? '${snapshot.connectionState}' : ''),
                 ],
