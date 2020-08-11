@@ -11,15 +11,18 @@ class PlaybackIcon extends StatefulWidget {
 class _PlaybackIconState extends State<PlaybackIcon> {
   @override
   Widget build(BuildContext context) {
-    return widget.playbackState == 'inactive'
-        ? SizedBox.shrink()
-        : CircleAvatar(
-            backgroundColor: Colors.lightBlue,
-            child: Icon(
+    return CircleAvatar(
+      radius: 25,
+      backgroundColor: widget.playbackState == 'inactive'
+          ? Theme.of(context).disabledColor
+          : Theme.of(context).primaryColorLight,
+      child: widget.playbackState == 'inactive'
+          ? Center(child: CircularProgressIndicator())
+          : Icon(
               widget.playbackState == 'playing'
                   ? Icons.play_arrow
                   : Icons.pause,
             ),
-          );
+    );
   }
 }

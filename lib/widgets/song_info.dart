@@ -31,18 +31,31 @@ class _SongInfoState extends State<SongInfo> {
                 : AspectRatio(
                     aspectRatio: 1,
                     child: Container(
-                      color: Colors.grey[300],
+                      child: Center(child: CircularProgressIndicator()),
+                      color: Theme.of(context).disabledColor,
                       width: double.infinity,
                     ),
                   ),
           ),
-          Text(
-            widget.title != '' ? widget.title : '',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Text(
-            widget.artist != '' ? 'by ' + widget.artist : '',
-            style: Theme.of(context).textTheme.subtitle1,
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: widget.artist != ''
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      Text(
+                        'by ' + widget.artist,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                    ],
+                  )
+                : CircularProgressIndicator(
+                    backgroundColor: Theme.of(context).disabledColor,
+                  ),
           ),
         ],
       ),
