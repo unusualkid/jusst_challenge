@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jusst_challenge/utility/size_config.dart';
@@ -7,6 +6,7 @@ import 'package:jusst_challenge/widgets/playback_icon.dart';
 import 'package:jusst_challenge/widgets/progress_bar.dart';
 import 'package:jusst_challenge/widgets/song_info.dart';
 import 'package:jusst_challenge/widgets/system_toast.dart';
+import 'package:jusst_challenge/widgets/volume_toast.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   var duration = 0;
   var playbackState = PlaybackState.inactive;
   var playbackPosition = 0;
-  var volume = -1;
+  var volume = 0;
   var systemState = SystemState.ready;
 
   @override
@@ -49,9 +49,10 @@ class _HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var parsedJson = json.decode(snapshot.data);
-              print('snapshot.data: ${snapshot.data}');
               if (parsedJson[Strings.metaDataKey] != null) {
+                playbackState = parsedJson[Strings.playbackKey];
                 var metaData = parsedJson[Strings.metaDataKey];
+
                 if (metaData[Strings.coverArtKey] != null) {
                   coverArtUrl = metaData[Strings.coverArtKey];
                 }
@@ -64,25 +65,16 @@ class _HomePageState extends State<HomePage> {
                 if (metaData[Strings.durationKey] != null) {
                   duration = metaData[Strings.durationKey];
                 }
-              }
-
-              if (parsedJson[Strings.volumeKey] != null) {
+              } else if (parsedJson[Strings.volumeKey] != null) {
                 volume = parsedJson[Strings.volumeKey];
-              }
-
-              if (parsedJson[Strings.playbackKey] != null) {
-                playbackState = parsedJson[Strings.playbackKey];
-              }
-
-              if (parsedJson[Strings.playbackPositionKey] != null) {
+              } else if (parsedJson[Strings.playbackPositionKey] != null) {
                 playbackPosition = parsedJson[Strings.playbackPositionKey];
-              }
-
-              if (parsedJson[Strings.systemKey] != null) {
+              } else if (parsedJson[Strings.systemKey] != null) {
                 systemState = parsedJson[Strings.systemKey];
               }
             }
 
+            // Stack SystemToast and VolumeToast on to pof main view
             return Stack(
               children: [
                 Container(
@@ -120,6 +112,7 @@ class _HomePageState extends State<HomePage> {
                 SystemToast(
                   message: systemState,
                 ),
+                VolumeToast(volume: volume),
               ],
             );
           },
@@ -132,20 +125,5 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     widget.channel.sink.close();
     super.dispose();
-  }
-}
-
-class VolumeToast extends StatefulWidget {
-  final message;
-
-  const VolumeToast({Key key, this.message}) : super(key: key);
-  @override
-  _VolumeToastState createState() => _VolumeToastState();
-}
-
-class _VolumeToastState extends State<VolumeToast> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
