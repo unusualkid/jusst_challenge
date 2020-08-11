@@ -18,7 +18,7 @@ class _PlaybackIconState extends State<PlaybackIcon> {
           ? Theme.of(context).disabledColor
           : Theme.of(context).primaryColorLight,
       child: widget.playbackState == PlaybackState.inactive
-          ? SizedBox.shrink()
+          ? Icon(Icons.stop)
           : Icon(
               widget.playbackState == PlaybackState.playing
                   ? Icons.play_arrow
