@@ -12,8 +12,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: Strings.appName,
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+        primarySwatch: Colors.lightBlue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        disabledColor: Colors.grey[400],
+        primaryColorLight: Colors.lightBlue,
         textTheme: TextTheme(
           bodyText1: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           bodyText2: TextStyle(fontSize: 15.0),
