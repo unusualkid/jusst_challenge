@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jusst_challenge/utility/strings.dart';
 
 class PlaybackIcon extends StatefulWidget {
   final playbackState;
@@ -13,13 +14,13 @@ class _PlaybackIconState extends State<PlaybackIcon> {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: 25,
-      backgroundColor: widget.playbackState == 'inactive'
+      backgroundColor: widget.playbackState == PlaybackState.inactive
           ? Theme.of(context).disabledColor
           : Theme.of(context).primaryColorLight,
-      child: widget.playbackState == 'inactive'
+      child: widget.playbackState == PlaybackState.inactive
           ? SizedBox.shrink()
           : Icon(
-              widget.playbackState == 'playing'
+              widget.playbackState == PlaybackState.playing
                   ? Icons.play_arrow
                   : Icons.pause,
             ),
