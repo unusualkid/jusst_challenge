@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:jusst_challenge/model/state.dart';
 import 'package:jusst_challenge/utility/strings.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -15,10 +16,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController _controller = TextEditingController();
   var coverArtUrl = '';
   var artist = '';
   var title = '';
+  var duration = -1;
+  var playbackState = PlaybackState.inactive;
+  var playbackPosition = -1;
+  var volume = -1;
 
   @override
   void initState() {
@@ -50,43 +54,49 @@ class _HomePageState extends State<HomePage> {
                 if (metaData[Strings.titleKey] != null) {
                   title = metaData[Strings.titleKey];
                 }
+                if (metaData[Strings.durationKey] != null) {
+                  duration = metaData[Strings.durationKey];
+                }
               }
-              return Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SongInfoWidget(
-                      url: coverArtUrl,
-                      artist: artist,
-                      title: title,
-                    ),
-                    Text(snapshot.hasData
-                        ? '${snapshot.data}'
-                        : 'snapshot.data'),
-                    Text(snapshot.hasData
-                        ? '${snapshot.connectionState}'
-                        : 'snapshot.connectionState'),
-                  ],
-                ),
-              );
+
+              // if (parsedJson[Strings.volumeKey] != null) {
+              //   volume = parsedJson[Strings.volumeKey];
+              // }
+
+              // if (parsedJson[Strings.playbackKey] != null) {
+              //   playbackState = parsedJson[Strings.playbackKey];
+              // }
+
+              // if (parsedJson[Strings.playbackPositionKey] != null) {
+              //   playbackPosition = parsedJson[Strings.playbackPositionKey];
+              //   duration += playbackPosition;
+              // }
+
+              // if (parsedJson[Strings.systemKey] != null) {
+              //   if (parsedJson[Strings.systemKey] != SystemState.ready) {}
+              // }
+
             }
-            return Text('Error: Check your internet.');
+
+            return Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SongInfoWidget(
+                    url: coverArtUrl,
+                    artist: artist,
+                    title: title,
+                  ),
+                  Text(snapshot.hasData ? '${snapshot.data}' : ''),
+                  Text(snapshot.hasData ? '${snapshot.connectionState}' : ''),
+                ],
+              ),
+            );
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _sendMessage,
-        tooltip: 'Send message',
-        child: Icon(Icons.play_arrow),
-      ),
     );
-  }
-
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      widget.channel.sink.add(_controller.text);
-    }
   }
 
   @override
@@ -115,29 +125,46 @@ class SongInfoWidget extends StatefulWidget {
 class _SongInfoWidgetState extends State<SongInfoWidget> {
   @override
   Widget build(BuildContext context) {
-    if (widget.url != '') {
-      return Column(
-        children: [
-          Container(
-            child: Image.network(
-              widget.url,
-            ),
-          ),
-          Text(widget.title),
-          Text('by ' + widget.artist),
-        ],
-      );
-    }
     return Column(
       children: [
         Container(
-          height: 250,
-          width: 250,
-          color: Colors.grey[300],
+          child: widget.url != ''
+              ? Image.network(
+                  widget.url,
+                )
+              : AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    color: Colors.grey[300],
+                    width: double.infinity,
+                  ),
+                ),
         ),
-        Text('title'),
-        Text('by artist'),
+        Text(widget.title != '' ? widget.title : ''),
+        Text(widget.artist != '' ? 'by ' + widget.artist : ''),
       ],
     );
   }
 }
+
+class PlaybackIcon extends StatefulWidget {
+  @override
+  _PlaybackIconState createState() => _PlaybackIconState();
+}
+
+class _PlaybackIconState extends State<PlaybackIcon> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Icon(Icons.pause),
+    );
+  }
+}
+
+var coverArtUrl = '';
+var artist = '';
+var title = '';
+var duration = -1;
+var playbackState = PlaybackState.inactive;
+var playbackPosition = -1;
+var volume = -1;
