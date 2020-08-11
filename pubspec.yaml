@@ -31,7 +31,11 @@ dependencies:
   # Provides StreamChannel wrappers for WebSocket connections.
   web_socket_channel: ^1.1.0
 
+  # Provides the song progress bar
   percent_indicator: ^2.1.5
+
+  # Show progress indicator while image loading
+  cached_network_image: ^2.2.0+1
 
 dev_dependencies:
   flutter_test:
