@@ -59,10 +59,10 @@ class _HomePageState extends State<HomePage> {
                   title = metaData[Strings.titleKey];
                 }
                 if (metaData[Strings.durationKey] != null) {
-                  duration = metaData[Strings.durationKey];
-
                   // Reset playback position on the progressBar
                   playbackPosition = 0;
+
+                  duration = metaData[Strings.durationKey];
                 }
               }
 
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             return Container(
               padding: EdgeInsets.all(10),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SongInfo(
                     url: coverArtUrl,
@@ -111,9 +111,6 @@ class _HomePageState extends State<HomePage> {
                       )
                     ],
                   ),
-                  Spacer(),
-                  Text(snapshot.hasData ? '${snapshot.data}' : ''),
-                  Text(snapshot.hasData ? '${snapshot.connectionState}' : ''),
                 ],
               ),
             );
