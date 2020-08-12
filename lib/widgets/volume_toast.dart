@@ -5,8 +5,9 @@ import 'package:jusst_challenge/utility/strings.dart';
 
 class VolumeToast extends StatefulWidget {
   final volume;
+  final Function onChanged;
 
-  const VolumeToast({Key key, this.volume}) : super(key: key);
+  const VolumeToast({Key key, this.volume, this.onChanged}) : super(key: key);
   @override
   _VolumeToastState createState() => _VolumeToastState();
 }
@@ -14,22 +15,16 @@ class VolumeToast extends StatefulWidget {
 class _VolumeToastState extends State<VolumeToast> {
   bool hideToast = false;
   Timer timer;
+
   @override
   Widget build(BuildContext context) {
-    if (timer != null) {
-      timer.cancel();
-      timer = null;
-      hideToast = false;
-
-      timer = Timer(Duration(seconds: 3), () {
-        setState(() {
-          hideToast = true;
-        });
+    timer = Timer(Duration(seconds: 3), () {
+      setState(() {
+        hideToast = true;
       });
-    }
+    });
 
     if (!hideToast) {
-      hideToast = false;
       return Align(
         alignment: Alignment.topLeft,
         child: Container(
