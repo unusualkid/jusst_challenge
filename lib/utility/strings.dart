@@ -15,7 +15,7 @@ class Strings {
 }
 
 class SystemState {
-  static const waitingForSocket = '...';
+  static const waitingForSocket = '...'; // For init
   static const booting = 'booting';
   static const updating = 'updating';
   static const error = 'error';
