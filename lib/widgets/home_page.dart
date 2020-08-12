@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jusst_challenge/utility/size_config.dart';
 import 'package:jusst_challenge/utility/strings.dart';
 import 'package:jusst_challenge/widgets/playback_icon.dart';
 import 'package:jusst_challenge/widgets/progress_bar.dart';
 import 'package:jusst_challenge/widgets/song_info.dart';
 import 'package:jusst_challenge/widgets/system_toast.dart';
-import 'package:jusst_challenge/widgets/volume_toast.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -28,7 +28,8 @@ class _HomePageState extends State<HomePage> {
   var playbackState = PlaybackState.inactive;
   var playbackPosition = 0;
   var volume = 0;
-  var systemState = '...';
+  var systemState = SystemState.waitingForSocket;
+  var showVolumeToast = true;
 
   @override
   void initState() {
@@ -48,8 +49,12 @@ class _HomePageState extends State<HomePage> {
           stream: widget.channel.stream,
           builder: (context, snapshot) {
             print(snapshot);
+
+            // Parse returned data from websocket
             if (snapshot.hasData) {
               var parsedJson = json.decode(snapshot.data);
+
+              // If there is there is a new song, Parse its metadata
               if (parsedJson[Strings.metaDataKey] != null) {
                 playbackState = parsedJson[Strings.playbackKey];
                 var metaData = parsedJson[Strings.metaDataKey];
@@ -68,20 +73,33 @@ class _HomePageState extends State<HomePage> {
                 }
               }
 
+              // Parse the new playbackPosition
               if (parsedJson[Strings.playbackPositionKey] != null) {
                 playbackPosition = parsedJson[Strings.playbackPositionKey];
               }
 
+              // Parse new systemState
               if (parsedJson[Strings.systemKey] != null) {
                 systemState = parsedJson[Strings.systemKey];
               }
 
+              // Parse new volume and displays toast
               if (parsedJson[Strings.volumeKey] != null) {
                 volume = parsedJson[Strings.volumeKey];
+
+                Fluttertoast.showToast(
+                  msg: "Volume: $volume",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.TOP,
+                  timeInSecForIosWeb: 3,
+                  backgroundColor: Colors.grey.withOpacity(0.7),
+                  textColor: Colors.white,
+                  fontSize: Theme.of(context).textTheme.headline6.fontSize,
+                );
               }
             }
 
-            // Stack SystemToast and VolumeToast on to pof main view
+            // Stack SystemToast on to pof main view
             return Stack(
               children: [
                 Container(
@@ -116,10 +134,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                SystemToast(
-                  message: systemState,
-                ),
-                VolumeToast(volume: volume),
+                SystemToast(systemState: systemState),
               ],
             );
           },
