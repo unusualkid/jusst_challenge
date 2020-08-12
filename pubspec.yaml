@@ -37,6 +37,9 @@ dependencies:
   # Show progress indicator while image loading
   cached_network_image: ^2.2.0+1
 
+  # add this line to your dependencies
+  fluttertoast: ^7.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
