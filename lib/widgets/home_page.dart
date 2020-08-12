@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   var playbackState = PlaybackState.inactive;
   var playbackPosition = 0;
   var volume = 0;
-  var systemState = SystemState.ready;
+  var systemState = '...';
 
   @override
   void initState() {
@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
         child: StreamBuilder(
           stream: widget.channel.stream,
           builder: (context, snapshot) {
+            print(snapshot);
             if (snapshot.hasData) {
               var parsedJson = json.decode(snapshot.data);
               if (parsedJson[Strings.metaDataKey] != null) {
@@ -65,12 +66,18 @@ class _HomePageState extends State<HomePage> {
                 if (metaData[Strings.durationKey] != null) {
                   duration = metaData[Strings.durationKey];
                 }
-              } else if (parsedJson[Strings.volumeKey] != null) {
-                volume = parsedJson[Strings.volumeKey];
-              } else if (parsedJson[Strings.playbackPositionKey] != null) {
+              }
+
+              if (parsedJson[Strings.playbackPositionKey] != null) {
                 playbackPosition = parsedJson[Strings.playbackPositionKey];
-              } else if (parsedJson[Strings.systemKey] != null) {
+              }
+
+              if (parsedJson[Strings.systemKey] != null) {
                 systemState = parsedJson[Strings.systemKey];
+              }
+
+              if (parsedJson[Strings.volumeKey] != null) {
+                volume = parsedJson[Strings.volumeKey];
               }
             }
 
